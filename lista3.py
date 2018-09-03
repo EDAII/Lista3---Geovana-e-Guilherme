@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import math
 import os
+import random
+
+from quicksort import QuickSorter
 
 
 class Subject:
@@ -8,6 +11,9 @@ class Subject:
     def __init__(self, code, name ):
         self.code = code
         self.name = name
+
+    def __str__(self):
+        return 'Código: ' + str(self.code) + ' - Nome: ' + self.name
 
 
 def search(code_to_search, subjects):
@@ -61,6 +67,24 @@ def read_file(path):
         print(line)
     file.close()
 
+def print_subjects(data):
+    for subject in data:
+        print(subject)
+
+def is_sorted(data, key):
+
+    current_check = data[0]
+
+    for item in data:
+        
+        if getattr(item, key) >= getattr(current_check, key):
+            current_check = item
+        else:
+            return False
+
+    return True
+
+
 ########################### MAIN ####################################
 
 file = open("codMat.txt", "r")
@@ -80,15 +104,22 @@ while True:
     # Estou usando busca binária então tem que estar ordenado por código
     choice = int(input("""
         Escolha o método e o parâmetro de ordenação:
-        (1) Método 1 - por código
+        (1) QuickSort - por código
         (2) Método 1 - por matéria
         (3) Método 2 - por código
-        (4) Método 2 - por matéria 
-        (5) Sair           
+        (4) Método 2 - por matéria
+        (5) Embaralhar
+        (6) Status (ordenado ou não)
+        (7) Imprimir tudo 
+        (0) Sair           
     """))
-
-    if choice == 1:
+    
+    if choice == 0:
         break
+    elif choice == 1:
+        qSort = QuickSorter()
+
+        subjects = qSort.sort(subjects, key='code')
     elif choice == 2:
         break
     elif choice == 3:
@@ -96,7 +127,12 @@ while True:
     elif choice == 4:
         break
     elif choice == 5:
-        break
+        random.shuffle(subjects)
+    elif choice == 6:
+        print('Por código: ' + str(is_sorted(subjects, 'code')))
+        print('Por nome: ' + str(is_sorted(subjects, 'name')))
+    elif choice == 7:
+        print_subjects(subjects)
     else:
         print("Opção inexistente!") 
     
