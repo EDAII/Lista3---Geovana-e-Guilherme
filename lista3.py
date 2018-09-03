@@ -16,7 +16,7 @@ class Subject:
         return 'Código: ' + str(self.code) + ' - Nome: ' + self.name
 
 
-def search(code_to_search, subjects):
+def search_by_code(code_to_search, subjects):
 
     lower_index = 0
     upper_index = subjects.__len__() - 1
@@ -38,6 +38,12 @@ def search(code_to_search, subjects):
 
     return None
 
+
+def search_by_name(name_to_search, subjects):
+
+    for subject in subjects:
+        if name_to_search.upper() in subject.name:
+            print(subject)
 
 def find_subject_path(search_result):
 
@@ -101,7 +107,7 @@ for line in file:
 file.close()
 
 while True:
-    # Estou usando busca binária então tem que estar ordenado por código
+    
     choice = int(input("""
         Escolha o método e o parâmetro de ordenação:
         (1) QuickSort - por código
@@ -110,37 +116,52 @@ while True:
         (4) Método 2 - por matéria
         (5) Embaralhar
         (6) Status (ordenado ou não)
-        (7) Imprimir tudo 
+        (7) Imprimir tudo
+        (8) Mostrar detalhes de disciplina 
+        (9) Busca por nome
         (0) Sair           
     """))
     
     if choice == 0:
         break
+
     elif choice == 1:
         qSort = QuickSorter()
-
         subjects = qSort.sort(subjects, key='code')
+
     elif choice == 2:
         break
+
     elif choice == 3:
         break
+
     elif choice == 4:
         break
+
     elif choice == 5:
         random.shuffle(subjects)
+
     elif choice == 6:
         print('Por código: ' + str(is_sorted(subjects, 'code')))
         print('Por nome: ' + str(is_sorted(subjects, 'name')))
+    
     elif choice == 7:
         print_subjects(subjects)
+    
+    elif choice == 8:
+        code_to_search = int(input("Digite o código da matéria: "))
+        if not is_sorted(subjects, 'code'):
+            qSort = QuickSorter()
+            subjects = qSort.sort(subjects, key='code')
+        search_result = search_by_code(code_to_search, subjects)
+        path = find_subject_path(search_result)
+        read_subject_folder(path)
+
+    elif choice == 9:
+        name_to_search = input('Digite o nome da disciplina: ')
+        search_by_name(name_to_search, subjects)
+
     else:
         print("Opção inexistente!") 
     
 
-code_to_search = int(input("Digite o código da matéria: "))
-
-search_result = search(code_to_search, subjects)
-
-path = find_subject_path(search_result)
-
-read_subject_folder(path)
