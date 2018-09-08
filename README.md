@@ -1,4 +1,4 @@
-## Busca e Ordenação
+## Ordenação nlogn
 ### Gerenciador do Matrícula Web
 
 ##### Alunos
