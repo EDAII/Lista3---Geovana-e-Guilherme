@@ -90,6 +90,70 @@ def is_sorted(data, key):
 
     return True
 
+def mergeSort(subjects):
+    # left = starting index of left array
+    # mid = ending index of left array 
+    # right = ending index of right array
+    # merge() = joins left[] and right[] arrays into one array[left...right]
+    # sub_array_size = size of left or right array 
+
+    sub_array_size = 1
+
+    while sub_array_size < len(subjects) - 1:
+         
+        left = 0
+
+        while left < len(subjects)-1:
+            
+            # (False result,True result) [Condition] 
+            mid = ( ( left + sub_array_size - 1, len(subjects) - 1) [ left + sub_array_size - 1 > len(subjects)-1])
+         
+            # (False result,True result) [Condition] 
+            right = ( (2 * sub_array_size + left - 1, len(subjects) - 1) [2 * sub_array_size + left - 1 > len(subjects)-1])
+             
+            merge(subjects, left, mid, right)
+            left = left + sub_array_size*2
+             
+        sub_array_size = 2 * sub_array_size
+    
+    return subjects
+ 
+def merge(subjects, left, mid, right):
+    # n1 = number of elements in left array
+    # n2 = number of elements in right array
+
+    n1 = mid - left + 1 
+    n2 = right - mid
+
+    L = [None] * n1    # fill with zeros
+    R = [None] * n2    # fill with zeros
+
+    # copy elements
+    for i in range(0, n1):
+        L[i] = subjects[left + i]
+    for i in range(0, n2):
+        R[i] = subjects[mid + i + 1]
+ 
+    i, j, k = 0, 0, left
+    while i < n1 and j < n2:
+        if L[i].code > R[j].code:
+            subjects[k] = R[j]
+            j += 1
+        else:
+            subjects[k] = L[i]
+            i += 1
+        k += 1
+ 
+    while i < n1:
+        subjects[k] = L[i]
+        i += 1
+        k += 1
+ 
+    while j < n2:
+        subjects[k] = R[j]
+        j += 1
+        k += 1
+
 
 ########################### MAIN ####################################
 
@@ -109,16 +173,14 @@ file.close()
 while True:
     
     choice = int(input("""
-        Escolha o método e o parâmetro de ordenação:
-        (1) QuickSort - por código
-        (2) Método 1 - por matéria
-        (3) Método 2 - por código
-        (4) Método 2 - por matéria
-        (5) Embaralhar
-        (6) Status (ordenado ou não)
-        (7) Imprimir tudo
-        (8) Mostrar detalhes de disciplina 
-        (9) Busca por nome
+        Escolha uma opção:
+        (1) Ordenar por código - QuickSort 
+        (2) Ordenar por código - MergeSort 
+        (3) Embaralhar
+        (4) Status (ordenado ou não)
+        (5) Imprimir tudo
+        (6) Mostrar detalhes de disciplina 
+        (7) Busca por nome
         (0) Sair           
     """))
     
@@ -130,25 +192,19 @@ while True:
         subjects = qSort.sort(subjects, key='code')
 
     elif choice == 2:
-        break
+        subjects = mergeSort(subjects)
 
     elif choice == 3:
-        break
-
-    elif choice == 4:
-        break
-
-    elif choice == 5:
         random.shuffle(subjects)
 
-    elif choice == 6:
+    elif choice == 4:
         print('Por código: ' + str(is_sorted(subjects, 'code')))
         print('Por nome: ' + str(is_sorted(subjects, 'name')))
     
-    elif choice == 7:
+    elif choice == 5:
         print_subjects(subjects)
     
-    elif choice == 8:
+    elif choice == 6:
         code_to_search = int(input("Digite o código da matéria: "))
         if not is_sorted(subjects, 'code'):
             qSort = QuickSorter()
@@ -157,7 +213,7 @@ while True:
         path = find_subject_path(search_result)
         read_subject_folder(path)
 
-    elif choice == 9:
+    elif choice == 7:
         name_to_search = input('Digite o nome da disciplina: ')
         search_by_name(name_to_search, subjects)
 
